@@ -11,7 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.6  # For API requests
+  google_fonts: ^6.1.0
+  http: ^1.3.0  # Update to the latest version
   provider: ^6.0.5  # For state management
   cupertino_icons: ^1.0.8  # For iOS style icons
   google_generative_ai: ^0.0.1-dev
@@ -42,3 +43,9 @@ flutter:
     - assets/chatapp_wallpaper8.jpg
     - assets/chatapp_wallpaper9.jpg
     - assets/chatapp_wallpaper10.jpg
+    - assets/robot_bg.jpg
+    - assets/robot_bg1.jpg
+    - assets/robot_bg2.jpg
+    - assets/robot_bg3.jpg
+    - assets/robot_bg4.jpg
+    - assets/profile_bg.jpg

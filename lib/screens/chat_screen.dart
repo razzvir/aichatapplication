@@ -98,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var chatProvider = Provider.of<ChatProvider>(context); // ✅ Add this
+    var chatProvider = Provider.of<ChatProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -130,7 +130,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
               ),
             ),
-            _buildMessageInput(chatProvider), // ✅ Fix: Pass chatProvider
+            _buildMessageInput(chatProvider),
           ],
         ),
       ),
@@ -193,7 +193,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildMessageItem(Map<String, dynamic> message) {
     bool isUser = message["role"] == "user";
-    bool isLoading = message["loading"] ?? false; // Check if loading
+    bool isLoading = message["loading"] ?? false;
     bool isImage = message["isImage"] ?? false;
     bool isPdf = message["isPdf"] ?? false;
     Uint8List? fileBytes = message["fileBytes"];
@@ -276,14 +276,19 @@ class _ChatScreenState extends State<ChatScreen> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
+          UserAccountsDrawerHeader(
             decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
             ),
-            child: const Text(
-              "Settings",
-              style: TextStyle(color: Colors.white, fontSize: 24),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: AssetImage('assets/profile_bg.jpg'),
+              radius: 40,
             ),
+            accountName: Text(
+              "Rajveer",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            accountEmail: Text("rajveer@email.com"),
           ),
           ListTile(
             leading: const Icon(Icons.wallpaper),
@@ -329,7 +334,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 return GestureDetector(
                   onTap: () {
                     widget.onWallpaperChange(wallpapers[index]);
-                    Navigator.pop(context);
+                    Navigator.pop(context); // Close the dialog
+                    Navigator.pop(context); // Close the drawer
                   },
                   child: Image.asset(wallpapers[index], fit: BoxFit.cover),
                 );

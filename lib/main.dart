@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'screens/chat_screen.dart';
 import 'providers/chat_provider.dart';
+import 'screens/home_page.dart';
 
 void main() {
   runApp(
@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String backgroundImage = "assets/chatapp_wallpaper3.jpg"; // Default wallpaper
+  String backgroundImage = "assets/chatapp_wallpaper7.jpg"; // Default wallpaper
 
   void updateWallpaper(String newWallpaper) {
     setState(() {
@@ -33,9 +33,12 @@ class _MyAppState extends State<MyApp> {
         primaryColor: Colors.blueAccent,
         colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.blue),
       ),
-      home: ChatScreen(
-        backgroundImage: backgroundImage,
+      home: HomePage(
+        key: ValueKey(
+          backgroundImage,
+        ), // Forces widget rebuild when backgroundImage changes
         onWallpaperChange: updateWallpaper,
+        backgroundImage: backgroundImage,
       ),
     );
   }
