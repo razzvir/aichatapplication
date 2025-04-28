@@ -3,9 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/chat_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
-// For web file bytes
-import 'dart:io' show File; // Only for mobile
-import 'package:flutter/foundation.dart'; // Required for kIsWeb
+import 'dart:io' show File;
+import 'package:flutter/foundation.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class ChatScreen extends StatefulWidget {
@@ -28,10 +27,13 @@ class _ChatScreenState extends State<ChatScreen> {
   late stt.SpeechToText _speech;
   bool _isListening = false;
 
+  late String _currentWallpaper;
+
   @override
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
+    _currentWallpaper = widget.backgroundImage;
   }
 
   void _sendMessage() {
@@ -77,11 +79,9 @@ class _ChatScreenState extends State<ChatScreen> {
           result.files.single.extension == "png";
 
       if (kIsWeb) {
-        // Web: Use bytes instead of path
         fileBytes = result.files.single.bytes;
-        filePath = result.files.single.name; // Just use the name for web
+        filePath = result.files.single.name;
       } else {
-        // Mobile/Desktop: Use file path
         filePath = result.files.single.path;
       }
 
@@ -116,7 +116,7 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(widget.backgroundImage),
+            image: AssetImage(_currentWallpaper),
             fit: BoxFit.cover,
           ),
         ),
@@ -180,10 +180,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               )
               : IconButton(
-                icon: const Icon(
-                  Icons.send,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
+                icon: const Icon(Icons.send, color: Colors.white),
                 onPressed: _sendMessage,
               ),
         ],
@@ -248,10 +245,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 ? GestureDetector(
                   onTap: () => OpenFile.open(message["filePath"]),
                   child: Row(
-                    children: [
-                      const Icon(Icons.picture_as_pdf, color: Colors.red),
-                      const SizedBox(width: 8),
-                      const Text(
+                    children: const [
+                      Icon(Icons.picture_as_pdf, color: Colors.red),
+                      SizedBox(width: 8),
+                      Text(
                         "Open PDF",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -280,15 +277,15 @@ class _ChatScreenState extends State<ChatScreen> {
             decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
             ),
-            currentAccountPicture: CircleAvatar(
+            currentAccountPicture: const CircleAvatar(
               backgroundImage: AssetImage('assets/profile_bg.jpg'),
               radius: 40,
             ),
-            accountName: Text(
+            accountName: const Text(
               "Rajveer",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            accountEmail: Text("rajveer@email.com"),
+            accountEmail: const Text("rajveer@email.com"),
           ),
           ListTile(
             leading: const Icon(Icons.wallpaper),
@@ -333,6 +330,9 @@ class _ChatScreenState extends State<ChatScreen> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
+                    setState(() {
+                      _currentWallpaper = wallpapers[index];
+                    });
                     widget.onWallpaperChange(wallpapers[index]);
                     Navigator.pop(context); // Close the dialog
                     Navigator.pop(context); // Close the drawer

@@ -6,8 +6,8 @@ plugins {
 
 android {
     namespace = "com.example.aichatapp"
-    compileSdk = 35  // Use the latest stable SDK version
-    ndkVersion = "27.0.12077973"  // Ensure it matches your dependencies
+    compileSdk = 35
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -20,8 +20,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.aichatapp"
-        minSdk = 21  // Use at least 21 for better compatibility
-        targetSdk = 34
+        minSdk = 21
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
     }
