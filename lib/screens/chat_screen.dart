@@ -6,6 +6,9 @@ import 'package:open_file/open_file.dart';
 import 'dart:io' show File;
 import 'package:flutter/foundation.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatScreen extends StatefulWidget {
   final String backgroundImage;
@@ -269,30 +272,60 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildDrawer(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
-            ),
-            currentAccountPicture: const CircleAvatar(
-              backgroundImage: AssetImage('assets/profile_bg.jpg'),
-              radius: 40,
-            ),
-            accountName: const Text(
-              "Rajveer",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            accountEmail: const Text("rajveer@email.com"),
-          ),
-          ListTile(
-            leading: const Icon(Icons.wallpaper),
-            title: const Text("Set Wallpaper"),
-            onTap: () => _showWallpaperSelection(context),
-          ),
-        ],
+      child: FutureBuilder<DocumentSnapshot>(
+        future:
+            FirebaseFirestore.instance.collection('users').doc(user?.uid).get(),
+        builder: (context, snapshot) {
+          final username =
+              snapshot.hasData && snapshot.data!.exists
+                  ? snapshot.data!['username'] ?? 'User'
+                  : 'User';
+
+          return ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              UserAccountsDrawerHeader(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue, Colors.purple],
+                  ),
+                ),
+                currentAccountPicture: const CircleAvatar(
+                  backgroundImage: AssetImage('assets/profile_bg.jpg'),
+                  radius: 40,
+                ),
+                accountName: Text(
+                  username,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                accountEmail: Text(user?.email ?? "no-email@example.com"),
+              ),
+              ListTile(
+                leading: const Icon(Icons.wallpaper),
+                title: const Text("Set Wallpaper"),
+                onTap: () => _showWallpaperSelection(context),
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text("Logout"),
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    (route) => false,
+                  );
+                },
+              ),
+            ],
+          );
+        },
       ),
     );
   }
