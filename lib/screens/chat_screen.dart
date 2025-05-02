@@ -9,6 +9,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'image_generation_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final String backgroundImage;
@@ -310,6 +311,20 @@ class _ChatScreenState extends State<ChatScreen> {
                 leading: const Icon(Icons.wallpaper),
                 title: const Text("Set Wallpaper"),
                 onTap: () => _showWallpaperSelection(context),
+              ),
+              // ✅ Add this for Image Generation
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text("Image Generation"),
+                onTap: () {
+                  Navigator.pop(context); // Close drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ImageGenerationScreen(),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.logout),
